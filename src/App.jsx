@@ -1,68 +1,123 @@
-import React, { useState } from 'react';
-import './App.css';
-import Header from './Header';
+import React, { useState, useEffect } from "react";
+import "./App.css";
 
-function App() {
+const App = () => {
   const [tasks, setTasks] = useState([]);
-  const [view, setView] = useState('daily');
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [startHour, setStartHour] = useState(0);
+  const [endHour, setEndHour] = useState(23);
 
-  const addTask = (task) => {
-    setTasks([...tasks, { text: task, view }]);
-  };
+  // Load tasks from local storage on initial render
+  useEffect(() => {
+    const savedStartHour = Number(localStorage.getItem("startHour"));
+    const savedEndHour = Number(localStorage.getItem("endHour"));
+    const savedTasks = JSON.parse(localStorage.getItem("tasks"));
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
-  return (
-    <div className="App">
-      <Header toggleMenu={toggleMenu} menuOpen={menuOpen} setView={setView} />
-      <TaskInput addTask={addTask} />
-      <h2>{view.charAt(0).toUpperCase() + view.slice(1)} Tasks</h2>
-      <TaskList tasks={tasks} />
-    </div>
-  );
-}
-
-const TaskInput = ({ addTask }) => {
-  const [task, setTask] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (task) {
-      addTask(task);
-      setTask('');
+    if (savedTasks && savedStartHour >= 0 && savedEndHour >= 0) {
+      setStartHour(savedStartHour);
+      setEndHour(savedEndHour);
+      setTasks(savedTasks);
+    } else {
+      setTasks(Array(endHour - startHour + 1).fill({ text: "", completed: false }));
     }
+  }, []);
+
+  // Save tasks and hours to local storage whenever they change
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem("startHour", startHour);
+    localStorage.setItem("endHour", endHour);
+  }, [tasks, startHour, endHour]);
+
+  const handleTaskChange = (hour, event) => {
+    const newTasks = [...tasks];
+    newTasks[hour - startHour] = { ...newTasks[hour - startHour], text: event.target.value };
+    setTasks(newTasks);
+  };
+
+  const handleTaskComplete = (hour) => {
+    const newTasks = [...tasks];
+    newTasks[hour - startHour] = { ...newTasks[hour - startHour], completed: !newTasks[hour - startHour].completed };
+    setTasks(newTasks);
+  };
+
+  const handleTaskDelete = (hour) => {
+    const newTasks = [...tasks];
+    newTasks[hour - startHour] = { text: "", completed: false };
+    setTasks(newTasks);
+  };
+
+  const formatHour = (hour) => {
+    const period = hour < 12 ? "AM" : "PM";
+    const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+    return `${displayHour}:00 ${period}`;
+  };
+
+  const handleRangeSubmit = (event) => {
+    event.preventDefault();
+    const newTasks = Array(endHour - startHour + 1).fill({ text: "", completed: false });
+    setTasks(newTasks);
   };
 
   return (
-    <form className="task-input" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={task}
-        onChange={(e) => setTask(e.target.value)}
-        placeholder="Add a new task"
-      />
-      <button type="submit">Add Task</button>
-    </form>
+    <div className="app">
+      <h1>Daily Hourly Tracker</h1>
+      <form onSubmit={handleRangeSubmit} className="time-range-form">
+        <label>
+          Start Hour:
+          <input
+            type="number"
+            value={startHour}
+            onChange={(e) => setStartHour(Number(e.target.value))}
+            min="0"
+            max="23"
+          />
+        </label>
+        <label>
+          End Hour:
+          <input
+            type="number"
+            value={endHour}
+            onChange={(e) => setEndHour(Number(e.target.value))}
+            min="0"
+            max="23"
+          />
+        </label>
+        <button type="submit">Set Range</button>
+      </form>
+      <div className="hourly-tracker">
+        {tasks.map((task, index) => {
+          const hour = startHour + index;
+          return (
+            <div key={hour} className="hour-block">
+              <div className="hour-label">{formatHour(hour)}</div>
+              <input
+                type="text"
+                value={task.text}
+                onChange={(event) => handleTaskChange(hour, event)}
+                placeholder="Enter task"
+                className={`task-input ${task.completed ? "completed" : ""}`}
+                disabled={task.completed}
+              />
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={() => handleTaskComplete(hour)}
+                className="task-checkbox"
+              />
+              <button
+                onClick={() => handleTaskDelete(hour)}
+                className="delete-button"
+              >
+                Delete
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 
-const TaskList = ({ tasks }) => (
-  <div className="task-list">
-    {tasks
-      .filter(task => task.view === view)
-      .map((task, index) => (
-        <Task key={index} task={task.text} />
-      ))}
-  </div>
-);
-
-const Task = ({ task }) => (
-  <div className="task">
-    <p>{task}</p>
-  </div>
-);
-
 export default App;
+
+

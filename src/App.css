@@ -1,80 +1,136 @@
-.App {
-  text-align: center;
+/* General Styles */
+
+.app {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
-  position: relative;
 }
 
-.header {
-  background-color: #282c34;
-  padding: 20px;
-  color: white;
+.hour-block {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-
-.hamburger {
-  font-size: 24px;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-
-.menu {
-  position: absolute;
-  top: 60px;
-  right: 20px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 150px; /* Adjust as needed */
-}
-
-.menu ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.menu li {
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: #e8f0fe;
   padding: 10px;
-  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 10px;
 }
 
-.menu li:hover {
-  background: #f4f4f4;
+.hour-label {
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .task-input {
-  margin: 20px 0;
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 5px;
+  width: 100%;
 }
 
-.task-input input {
-  padding: 10px;
-  font-size: 16px;
-  width: 70%;
+.task-checkbox {
   margin-right: 10px;
 }
 
-.task-input button {
-  padding: 10px;
-  font-size: 16px;
+.delete-button {
+  padding: 5px 10px;
+  border: none;
+  background-color: #ff4d4d;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
 }
 
-.task-list {
-  margin: 20px 0;
+.delete-button:hover {
+  background-color: #e60000;
 }
 
-.task {
-  background-color: #f4f4f4;
-  margin: 10px 0;
+.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.time-range-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.time-range-form label {
+  margin-bottom: 10px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.time-range-form input {
+  padding: 5px;
+  font-size: 14px;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.time-range-form button {
+  margin-top: 10px;
   padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.time-range-form button:hover {
+  background-color: #45a049;
+}
+
+/* Responsive Styles */
+
+@media (min-width: 600px) {
+  .hour-block {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .task-input {
+    margin-right: 10px;
+    width: auto;
+  }
+
+  .task-checkbox {
+    margin-left: 10px;
+  }
+
+  .delete-button {
+    width: auto;
+  }
+
+  .time-range-form {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .time-range-form label {
+    margin-bottom: 0;
+    margin-right: 10px;
+    width: auto;
+  }
+
+  .time-range-form input {
+    width: auto;
+    margin-top: 0;
+    margin-right: 10px;
+  }
+
+  .time-range-form button {
+    margin-top: 0;
+    width: auto;
+  }
 }
