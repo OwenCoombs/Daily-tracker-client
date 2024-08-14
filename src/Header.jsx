@@ -1,17 +1,21 @@
-import { Link } from "react-router-dom"
-
-const Header = ({ onHamburgerClick }) => {
+function Header({ toggleMenu, menuOpen, setView }) {
   return (
-    <header className="app-header">
-      <div className="hamburger-icon" onClick={onHamburgerClick}>
-        &#9776;
-      </div>
-      <div className="logo">Task Tracker</div>
-      <div className="profile-icon">
-        <img src="profile-pic-url" alt="Profile" />
-      </div>
+    <header className="header">
+      <h1>Daily Task Tracker</h1>
+      <button className="hamburger" onClick={toggleMenu}>
+        ☰
+      </button>
+      {menuOpen && (
+        <nav className="menu">
+          <ul>
+            <li onClick={() => setView('daily')}>Daily Tasks</li>
+            <li onClick={() => setView('weekly')}>Weekly Tasks</li>
+            <li onClick={() => setView('monthly')}>Monthly Tasks</li>
+          </ul>
+        </nav>
+      )}
     </header>
   );
-};
+}
 
-export default Header
+export default Header;

@@ -1,24 +1,14 @@
+import React from 'react';
+import TaskItem from './TaskItem';
+
 const TaskList = ({ tasks }) => {
-    return (
-      <div className="task-list">
-        {tasks.map((task) => (
-          <TaskItem key={task.id} task={task} />
-        ))}
-      </div>
-    );
-  };
-  
-  const TaskItem = ({ task }) => {
-    return (
-      <div className="task-item">
-        <input type="checkbox" checked={task.completed} />
-        <div className="task-details">
-          <span className="task-name">{task.name}</span>
-          <span className="task-time">{task.time}</span>
-        </div>
-      </div>
-    );
-  };
+  return (
+    <div className="task-list">
+      {tasks.map((task) => (
+        <TaskItem key={task.id} task={task} />
+      ))}
+    </div>
+  );
+};
 
-
-  export default TaskList
+export default TaskList;
